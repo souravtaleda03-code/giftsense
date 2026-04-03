@@ -94,13 +94,13 @@ export async function generateGiftSuggestions(
 
   if (provider === "groq") {
     if (!process.env.GROQ_API_KEY) {
-      throw new Error("GROQ_API_KEY is not configured. Please add it to .env.local");
+      throw new Error("GROQ_API_KEY is not configured. Please add it to your environment variables.");
     }
     return generateWithGroq(profile);
   }
 
   if (!process.env.OPENAI_API_KEY) {
-    throw new Error("OPENAI_API_KEY is not configured. Please add it to .env.local");
+    throw new Error("OPENAI_API_KEY is not configured in .env.local. Please add your key to proceed.");
   }
   return generateWithOpenAI(profile);
 }

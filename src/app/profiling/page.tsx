@@ -24,7 +24,7 @@ export default function ProfilingPage() {
         body: JSON.stringify({
           recipientName: flow.recipientName,
           personalityTypes: Array.from(flow.personalityTypes),
-          interests: flow.interests.map((i) => ({
+          interests: flow.interests.map((i: { name: string; intensity: string }) => ({
             name: i.name,
             intensity: i.intensity,
           })),
@@ -35,7 +35,8 @@ export default function ProfilingPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        flow.setError(data.error || "Failed to generate suggestions");
+        const errorMsg = data.error || "Failed to generate suggestions";
+        flow.setError(errorMsg);
         flow.setIsGenerating(false);
         return;
       }
@@ -70,8 +71,9 @@ export default function ProfilingPage() {
       flow.setDirections(directions);
       flow.setIsGenerating(false);
       router.push("/directions");
-    } catch {
-      flow.setError("Network error. Please try again.");
+    } catch (err) {
+      console.error("Frontend generation error:", err);
+      flow.setError("Network error: Could not connect to the server. Please check if 'npm run dev' is running.");
       flow.setIsGenerating(false);
     }
   };
@@ -104,10 +106,10 @@ export default function ProfilingPage() {
             INTERESTS &amp; HOBBIES
           </h3>
           <div className="space-y-3">
-            {flow.interests.map((interest, i) => (
+            {flow.interests.map((interest: { name: string; intensity: string }, i: number) => (
               <InterestCard
                 key={`${interest.name}-${i}`}
-                interest={interest}
+                interest={interest as any}
                 onRemove={() => flow.removeInterest(i)}
               />
             ))}

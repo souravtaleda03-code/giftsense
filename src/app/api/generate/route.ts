@@ -41,6 +41,9 @@ export async function POST(request: Request) {
     const message = err instanceof Error ? err.message : "An unexpected error occurred";
 
     const status = message.includes("not configured") ? 503 : 500;
-    return NextResponse.json({ error: message }, { status });
+    return NextResponse.json(
+      { error: message, code: "GENERATION_ERROR" },
+      { status }
+    );
   }
 }
